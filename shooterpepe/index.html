@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pygame Shooter</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        async function main() {
+            try {
+                let pyodide = await loadPyodide({
+                    indexURL: "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/"
+                });
+                await pyodide.loadPackage(["pygame"]);
+                
+                // Fetch the game script
+                let response = await fetch("game.py");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch game.py");
+                }
+                let gameScript = await response.text();
+
+                // Run the game script
+                await pyodide.runPythonAsync(gameScript);
+            } catch (error) {
+                console.error("Error loading Pyodide or running the script:", error);
+                document.body.innerHTML = "<h1>Error loading the game. Check the console for details.</h1>";
+            }
+        }
+        main();
+    </script>
+</body>
+</html>
